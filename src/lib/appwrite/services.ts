@@ -36,7 +36,7 @@ export async function getAllServices(): Promise<Service[]> {
       appwriteConfig.databaseId,
       appwriteConfig.servicesCollectionId,
       [
-        Query.equal("isActive", true),
+        Query.equal("isActive", [true]),
         Query.orderDesc("createdAt"),
         Query.limit(100),
       ]
@@ -100,7 +100,11 @@ export async function getServicesByProvider(
     const response = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.servicesCollectionId,
-      [Query.equal("providerId", providerId), Query.orderDesc("createdAt")]
+      [
+        Query.equal("providerId", [providerId]),
+        Query.equal("isActive", [true]),
+        Query.orderDesc("createdAt"),
+      ]
     );
 
     return response.documents.map((doc) => ({
@@ -146,7 +150,6 @@ export async function updateService(
 
 export async function deleteService(serviceId: string) {
   try {
-    // Soft delete - just set isActive to false
     await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.servicesCollectionId,

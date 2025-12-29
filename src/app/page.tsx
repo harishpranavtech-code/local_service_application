@@ -138,10 +138,10 @@ export default function HomePage() {
 
         {loading ? (
           <div className="py-12 text-center">
-            <div className="text-lg text-gray-400">Loading services...</div>
+            <div className="text-lg   text-gray-400">Loading services...</div>
           </div>
         ) : services.length === 0 ? (
-          <div className="py-12 text-center">
+          <div className="py-12 text-center ">
             <p className="mb-4 text-lg text-gray-400">
               No services available yet.
             </p>

@@ -7,12 +7,19 @@ export async function registerUser(data: RegisterData) {
   try {
     const { email, password, name, role } = data;
 
+    // First, check if there's an active session and delete it
+    try {
+      await account.deleteSession("current");
+    } catch {
+      // No active session, continue
+    }
+
     // Create auth account
     const newAccount = await account.create(ID.unique(), email, password, name);
 
     if (!newAccount) throw new Error("Account creation failed");
 
-    // Create session (auto login)
+    // Create session (login)
     await account.createEmailPasswordSession(email, password);
 
     // Create user document in database
@@ -38,6 +45,13 @@ export async function registerUser(data: RegisterData) {
 
 export async function loginUser(email: string, password: string) {
   try {
+    // Delete any existing session first
+    try {
+      await account.deleteSession("current");
+    } catch {
+      // No active session, continue
+    }
+
     const session = await account.createEmailPasswordSession(email, password);
     return session;
   } catch (error) {
@@ -59,7 +73,6 @@ export async function logoutUser() {
 
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    // First check if there's an active session
     const currentAccount = await account.get();
 
     if (!currentAccount) return null;
@@ -88,7 +101,6 @@ export async function getCurrentUser(): Promise<User | null> {
       createdAt: doc.createdAt as string,
     };
   } catch (error) {
-    // User is not logged in - this is normal, not an // error
     console.log(error);
 
     console.log("No active session");
