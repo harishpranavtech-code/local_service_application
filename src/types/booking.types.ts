@@ -16,7 +16,6 @@ export interface Booking {
 }
 
 export interface CreateBookingData {
-  serviceId: string;
   bookingDate: string;
   bookingTime: string;
   notes?: string;
