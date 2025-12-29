@@ -3,31 +3,45 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { getServicesByProvider } from "@/src/lib/appwrite/services";
-import { Service } from "@/src/types";
+import { getBookingsByProvider } from "@/src/lib/appwrite/bookings";
+import { Service, Booking } from "@/src/types";
 import Link from "next/link";
 import { Plus, Briefcase, Calendar, DollarSign } from "lucide-react";
 
 export default function ProviderDashboardPage() {
   const { user } = useAuth();
   const [services, setServices] = useState<Service[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadServices = useCallback(async () => {
+  const loadData = useCallback(async () => {
     if (!user) return;
 
     try {
-      const data = await getServicesByProvider(user.$id);
-      setServices(data);
+      const [servicesData, bookingsData] = await Promise.all([
+        getServicesByProvider(user.$id),
+        getBookingsByProvider(user.$id),
+      ]);
+      setServices(servicesData);
+      setBookings(bookingsData);
     } catch (error) {
-      console.error("Failed to load services:", error);
+      console.error("Failed to load data:", error);
     } finally {
       setLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    loadServices();
-  }, [loadServices]);
+    loadData();
+  }, [loadData]);
+
+  const activeBookings = bookings.filter(
+    (b) => b.status === "pending" || b.status === "confirmed"
+  ).length;
+
+  const totalEarnings = bookings
+    .filter((b) => b.status === "completed")
+    .reduce((sum, b) => sum + b.totalPrice, 0);
 
   return (
     <div className="p-8">
@@ -57,7 +71,7 @@ export default function ProviderDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm mb-1">Active Bookings</p>
-              <p className="text-3xl font-bold text-white">0</p>
+              <p className="text-3xl font-bold text-white">{activeBookings}</p>
             </div>
             <div className="w-12 h-12 bg-neutral-800/50 rounded-lg flex items-center justify-center">
               <Calendar className="w-6 h-6 text-white" />
@@ -69,7 +83,7 @@ export default function ProviderDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm mb-1">Total Earnings</p>
-              <p className="text-3xl font-bold text-white">₹0</p>
+              <p className="text-3xl font-bold text-white">₹{totalEarnings}</p>
             </div>
             <div className="w-12 h-12 bg-neutral-800/50 rounded-lg flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-white" />
@@ -95,6 +109,13 @@ export default function ProviderDashboardPage() {
           >
             <Briefcase className="w-5 h-5" />
             <span>View All Services</span>
+          </Link>
+          <Link
+            href="/provider-dashboard/bookings"
+            className="flex items-center gap-2 bg-neutral-800/50 text-white px-6 py-3 rounded-lg hover:bg-neutral-700/50 border border-white/10 transition-colors font-medium"
+          >
+            <Calendar className="w-5 h-5" />
+            <span>View Bookings</span>
           </Link>
         </div>
       </div>

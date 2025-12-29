@@ -7,19 +7,46 @@ import { Service } from "@/src/types";
 import { ServiceCard } from "@/src/components/services/ServiceCard";
 import Link from "next/link";
 
+const categories = [
+  "All",
+  "Plumbing",
+  "Electrical",
+  "Carpentry",
+  "Cleaning",
+  "Painting",
+  "AC Repair",
+  "Appliance Repair",
+  "Pest Control",
+  "Moving & Packing",
+  "Other",
+];
+
 export default function HomePage() {
   const { user, loading: authLoading, logout } = useAuth();
   const [services, setServices] = useState<Service[]>([]);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     loadServices();
   }, []);
 
+  useEffect(() => {
+    if (selectedCategory === "All") {
+      setFilteredServices(services);
+    } else {
+      setFilteredServices(
+        services.filter((s) => s.category === selectedCategory)
+      );
+    }
+  }, [selectedCategory, services]);
+
   async function loadServices() {
     try {
       const data = await getAllServices();
       setServices(data);
+      setFilteredServices(data);
     } catch (error) {
       console.error("Failed to load services:", error);
     } finally {
@@ -106,8 +133,8 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-24">
-        <div className="pointer-events-none absolute -top-40 -left-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-40 -right-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
+        <div className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-4 text-5xl font-bold text-white">
@@ -130,20 +157,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Category Filter */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                selectedCategory === category
+                  ? "bg-white text-black"
+                  : "bg-neutral-800/50 text-gray-300 hover:bg-neutral-700/50 border border-white/10"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Services Section */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <h3 className="mb-10 text-3xl font-bold text-white">
-          Available Services
+          {selectedCategory === "All"
+            ? "Available Services"
+            : `${selectedCategory} Services`}
         </h3>
 
         {loading ? (
           <div className="py-12 text-center">
-            <div className="text-lg   text-gray-400">Loading services...</div>
+            <div className="text-lg text-gray-400">Loading services...</div>
           </div>
-        ) : services.length === 0 ? (
-          <div className="py-12 text-center ">
+        ) : filteredServices.length === 0 ? (
+          <div className="py-12 text-center">
             <p className="mb-4 text-lg text-gray-400">
-              No services available yet.
+              {selectedCategory === "All"
+                ? "No services available yet."
+                : `No ${selectedCategory} services available.`}
             </p>
 
             {user?.role === "provider" && (
@@ -157,7 +207,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
+            {filteredServices.map((service) => (
               <ServiceCard key={service.$id} service={service} />
             ))}
           </div>
