@@ -2,9 +2,9 @@
 
 import { useAuth } from "@/src/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Home, Calendar, LogOut } from "lucide-react";
+import { Home, Calendar, LogOut, Menu, X } from "lucide-react";
 
 export default function CustomerDashboardLayout({
   children,
@@ -13,6 +13,7 @@ export default function CustomerDashboardLayout({
 }) {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || user.role !== "customer")) {
@@ -35,13 +36,43 @@ export default function CustomerDashboardLayout({
   return (
     <div className="fixed inset-0 min-h-screen w-screen bg-linear-to-r from-black via-neutral-900 to-black">
       <div className="flex h-screen">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-lg text-white"
+        >
+          {sidebarOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
+        </button>
+
+        {/* Sidebar - Mobile Overlay */}
+        {sidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 bg-neutral-900/80 backdrop-blur-xl border-r border-white/10">
+        <aside
+          className={`
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+          fixed lg:static
+          w-64 h-screen
+          bg-neutral-900/80 backdrop-blur-xl border-r border-white/10
+          transition-transform duration-300 ease-in-out
+          z-40
+        `}
+        >
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="p-6 border-b border-white/10">
-              <Link href="/">
-                <h1 className="text-2xl font-bold text-white cursor-pointer">
+              <Link href="/" onClick={() => setSidebarOpen(false)}>
+                <h1 className="text-xl sm:text-2xl font-bold text-white cursor-pointer">
                   Customer Hub
                 </h1>
               </Link>
@@ -50,11 +81,11 @@ export default function CustomerDashboardLayout({
             {/* User Info */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-neutral-700 to-neutral-800 flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-neutral-700 to-neutral-800 flex items-center justify-center text-white font-bold text-sm">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <p className="text-white font-medium">{user.name}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium truncate">{user.name}</p>
                   <p className="text-gray-400 text-sm">Customer</p>
                 </div>
               </div>
@@ -64,6 +95,7 @@ export default function CustomerDashboardLayout({
             <nav className="flex-1 p-4 space-y-2">
               <Link
                 href="/"
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
                 <Home className="w-5 h-5" />
@@ -72,6 +104,7 @@ export default function CustomerDashboardLayout({
 
               <Link
                 href="/dashboard"
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
                 <Calendar className="w-5 h-5" />
@@ -82,7 +115,10 @@ export default function CustomerDashboardLayout({
             {/* Logout */}
             <div className="p-4 border-t border-white/10">
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  setSidebarOpen(false);
+                }}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors w-full"
               >
                 <LogOut className="w-5 h-5" />
@@ -93,7 +129,7 @@ export default function CustomerDashboardLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto lg:ml-0">{children}</main>
       </div>
     </div>
   );

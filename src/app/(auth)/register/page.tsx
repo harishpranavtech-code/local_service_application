@@ -25,7 +25,7 @@ export default function RegisterPage() {
 
     try {
       await register({ name, email, password, role });
-      router.push("/"); // Redirect to homepage after registration
+      router.push("/");
     } catch (err) {
       const error = err as Error;
       setError(error.message || "Registration failed. Please try again.");
@@ -35,154 +35,138 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="fixed inset-0 min-h-screen w-screen overflow-hidden bg-linear-to-r from-black via-neutral-900 to-black">
-      {/* Subtle background glow */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
+    <div className="fixed inset-0 min-h-screen w-screen bg-linear-to-r from-black via-neutral-900 to-black flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-neutral-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+            Create Account
+          </h1>
+          <p className="text-gray-400 mb-6 text-sm sm:text-base">
+            Join our platform today
+          </p>
 
-      <div className="relative z-10 flex min-h-screen w-full items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          <div className="rounded-2xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl p-8 shadow-2xl">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <h1 className="text-3xl font-bold text-white">Create Account</h1>
-              <p className="mt-2 text-sm text-gray-400">
-                Join our platform today
-              </p>
+          {error && (
+            <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-4 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-300 mb-1"
+              >
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
+                placeholder="John Doe"
+              />
             </div>
 
-            {error && (
-              <div className="mb-6 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-300">
-                {error}
-              </div>
-            )}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300 mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
+                placeholder="you@example.com"
+              />
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400"
-                >
-                  Full Name
-                </label>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-300 mb-1"
+              >
+                Password
+              </label>
+              <div className="relative">
                 <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="Enter your full name"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition"
+                  minLength={8}
+                  className="w-full px-4 py-2.5 sm:py-2 pr-10 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
+                  placeholder="••••••••"
                 />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400"
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none"
                 >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@example.com"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition"
-                />
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
+              <p className="text-xs text-gray-500 mt-1">Minimum 8 characters</p>
+            </div>
 
-              {/* Password */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400"
-                >
-                  Password
-                </label>
-                <div className="relative">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                I want to
+              </label>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <label className="flex items-center cursor-pointer flex-1">
                   <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={8}
-                    placeholder="••••••••"
-                    className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition"
+                    type="radio"
+                    value="customer"
+                    checked={role === "customer"}
+                    onChange={(e) => setRole(e.target.value as "customer")}
+                    className="mr-2"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white transition"
-                  >
-                    {showPassword ? (
-                      <Eye className="h-5 w-5" />
-                    ) : (
-                      <EyeOff className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-                <p className="mt-1 text-xs text-gray-500">
-                  Minimum 8 characters
-                </p>
-              </div>
-
-              {/* Role */}
-              <div>
-                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-400">
-                  I want to
+                  <span className="text-sm sm:text-base">Book Services</span>
                 </label>
-                <div className="flex gap-6">
-                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
-                    <input
-                      type="radio"
-                      value="customer"
-                      checked={role === "customer"}
-                      onChange={(e) => setRole(e.target.value as "customer")}
-                      className="accent-blue-500"
-                    />
-                    Book Services
-                  </label>
-
-                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
-                    <input
-                      type="radio"
-                      value="provider"
-                      checked={role === "provider"}
-                      onChange={(e) => setRole(e.target.value as "provider")}
-                      className="accent-blue-500"
-                    />
-                    Provide Services
-                  </label>
-                </div>
+                <label className="flex items-center cursor-pointer flex-1">
+                  <input
+                    type="radio"
+                    value="provider"
+                    checked={role === "provider"}
+                    onChange={(e) => setRole(e.target.value as "provider")}
+                    className="mr-2"
+                  />
+                  <span className="text-sm sm:text-base">Provide Services</span>
+                </label>
               </div>
+            </div>
 
-              {/* Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-lg bg-white py-3 text-sm font-semibold text-black hover:bg-gray-200 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Creating account..." : "Sign Up"}
-              </button>
-            </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base"
+            >
+              {loading ? "Creating account..." : "Sign Up"}
+            </button>
+          </form>
 
-            {/* Footer */}
-            <p className="mt-8 text-center text-sm text-gray-400">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="font-semibold text-white hover:underline"
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
+          <p className="mt-6 text-center text-gray-400 text-sm sm:text-base">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-white hover:text-gray-300 font-medium"
+            >
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

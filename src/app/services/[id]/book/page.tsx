@@ -8,7 +8,6 @@ import { createBooking } from "@/src/lib/appwrite/bookings";
 import { Service } from "@/src/types";
 import Link from "next/link";
 import { ArrowLeft, Clock } from "lucide-react";
-// import { string } from "zod";
 
 export default function BookServicePage() {
   const params = useParams();
@@ -78,7 +77,6 @@ export default function BookServicePage() {
         service.price
       );
 
-      // Redirect to customer dashboard
       router.push("/dashboard");
     } catch (err) {
       const error = err as Error;
@@ -88,7 +86,6 @@ export default function BookServicePage() {
     }
   }
 
-  // Get minimum date (today)
   const today = new Date().toISOString().split("T")[0];
 
   if (loading) {
@@ -110,16 +107,18 @@ export default function BookServicePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/">
-              <h1 className="cursor-pointer text-2xl font-bold text-white">
+              <h1 className="cursor-pointer text-xl sm:text-2xl font-bold text-white">
                 Local Service Platform
               </h1>
             </Link>
 
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-300">{user?.name}</span>
+              <span className="text-sm text-gray-300 hidden sm:block truncate max-w-32">
+                {user?.name}
+              </span>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium text-white hover:underline"
+                className="text-xs sm:text-sm font-medium text-white hover:underline"
               >
                 My Bookings
               </Link>
@@ -129,33 +128,33 @@ export default function BookServicePage() {
       </nav>
 
       {/* Content */}
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8">
         <Link
           href={`/services/${serviceId}`}
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 sm:mb-6 transition-colors text-sm sm:text-base"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Back to Service</span>
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Booking Form */}
           <div className="lg:col-span-2">
-            <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-8">
-              <h1 className="text-3xl font-bold text-white mb-2">
+            <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                 Book Service
               </h1>
-              <p className="text-gray-400 mb-8">
+              <p className="text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base">
                 Fill in the details to book this service
               </p>
 
               {error && (
-                <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-6">
+                <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-6 text-sm">
                   {error}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label
                     htmlFor="bookingDate"
@@ -172,7 +171,7 @@ export default function BookServicePage() {
                     }
                     required
                     min={today}
-                    className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                    className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                   />
                 </div>
 
@@ -191,7 +190,7 @@ export default function BookServicePage() {
                       setFormData({ ...formData, bookingTime: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                    className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                   />
                 </div>
 
@@ -209,22 +208,22 @@ export default function BookServicePage() {
                       setFormData({ ...formData, notes: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent resize-none"
+                    className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent resize-none text-sm sm:text-base"
                     placeholder="Any specific requirements or instructions..."
                   />
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 bg-white text-black py-3 px-6 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium"
+                    className="flex-1 bg-white text-black py-2.5 sm:py-3 px-6 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base"
                   >
                     {submitting ? "Booking..." : "Confirm Booking"}
                   </button>
                   <Link
                     href={`/services/${serviceId}`}
-                    className="bg-neutral-800/50 text-white py-3 px-6 rounded-lg hover:bg-neutral-700/50 border border-white/10 transition-colors font-medium text-center"
+                    className="bg-neutral-800/50 text-white py-2.5 sm:py-3 px-6 rounded-lg hover:bg-neutral-700/50 border border-white/10 transition-colors font-medium text-center text-sm sm:text-base"
                   >
                     Cancel
                   </Link>
@@ -235,49 +234,63 @@ export default function BookServicePage() {
 
           {/* Service Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-white mb-4">
+            <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 sm:p-6 lg:sticky lg:top-24">
+              <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
                 Booking Summary
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Service</p>
-                  <p className="text-white font-medium">{service.title}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">
+                    Service
+                  </p>
+                  <p className="text-white font-medium text-sm sm:text-base">
+                    {service.title}
+                  </p>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Provider</p>
-                  <p className="text-white font-medium">
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">
+                    Provider
+                  </p>
+                  <p className="text-white font-medium text-sm sm:text-base">
                     {service.providerName}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Category</p>
-                  <p className="text-white font-medium">{service.category}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">
+                    Category
+                  </p>
+                  <p className="text-white font-medium text-sm sm:text-base">
+                    {service.category}
+                  </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-gray-400">
+                <div className="flex items-center gap-2 text-gray-400 text-sm">
                   <Clock className="w-4 h-4" />
-                  <span className="text-sm">{service.duration} minutes</span>
+                  <span>{service.duration} minutes</span>
                 </div>
 
                 {service.location && (
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Location</p>
-                    <p className="text-white font-medium">{service.location}</p>
+                    <p className="text-gray-400 text-xs sm:text-sm mb-1">
+                      Location
+                    </p>
+                    <p className="text-white font-medium text-sm sm:text-base">
+                      {service.location}
+                    </p>
                   </div>
                 )}
 
                 <div className="border-t border-white/10 pt-4 mt-4">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2 text-sm sm:text-base">
                     <span className="text-gray-400">Service Price</span>
                     <span className="text-white font-medium">
                       ₹{service.price}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-lg font-bold">
+                  <div className="flex items-center justify-between text-base sm:text-lg font-bold">
                     <span className="text-white">Total</span>
                     <span className="text-white">₹{service.price}</span>
                   </div>

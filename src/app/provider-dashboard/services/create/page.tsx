@@ -64,32 +64,34 @@ export default function CreateServicePage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <Link
           href="/provider-dashboard/services"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors text-sm sm:text-base"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Back to Services</span>
         </Link>
-        <h1 className="text-4xl font-bold text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
           Create New Service
         </h1>
-        <p className="text-gray-400">Add a new service to your offerings</p>
+        <p className="text-gray-400 text-sm sm:text-base">
+          Add a new service to your offerings
+        </p>
       </div>
 
       {/* Form */}
       <div className="max-w-2xl">
-        <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-8">
+        <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8">
           {error && (
-            <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-6 text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label
                 htmlFor="title"
@@ -105,7 +107,7 @@ export default function CreateServicePage() {
                   setFormData({ ...formData, title: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                 placeholder="e.g., Professional Plumbing Service"
               />
             </div>
@@ -125,7 +127,7 @@ export default function CreateServicePage() {
                 }
                 required
                 rows={4}
-                className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent resize-none"
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent resize-none text-sm sm:text-base"
                 placeholder="Describe your service in detail..."
               />
             </div>
@@ -144,17 +146,17 @@ export default function CreateServicePage() {
                   setFormData({ ...formData, category: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
               >
                 {categories.map((cat) => (
-                  <option key={cat} value={cat}>
+                  <option key={cat} value={cat} className="bg-neutral-900">
                     {cat}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="price"
@@ -172,7 +174,7 @@ export default function CreateServicePage() {
                   required
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                  className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                   placeholder="500"
                 />
               </div>
@@ -193,7 +195,7 @@ export default function CreateServicePage() {
                   }
                   required
                   min="1"
-                  className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                  className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                   placeholder="60"
                 />
               </div>
@@ -213,22 +215,22 @@ export default function CreateServicePage() {
                 onChange={(e) =>
                   setFormData({ ...formData, location: e.target.value })
                 }
-                className="w-full px-4 py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent"
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
                 placeholder="e.g., Chennai, Tamil Nadu"
               />
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-white text-black py-3 px-6 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium"
+                className="flex-1 bg-white text-black py-2.5 sm:py-3 px-6 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base"
               >
                 {loading ? "Creating..." : "Create Service"}
               </button>
               <Link
                 href="/provider-dashboard/services"
-                className="bg-neutral-800/50 text-white py-3 px-6 rounded-lg hover:bg-neutral-700/50 border border-white/10 transition-colors font-medium"
+                className="bg-neutral-800/50 text-white py-2.5 sm:py-3 px-6 rounded-lg hover:bg-neutral-700/50 border border-white/10 transition-colors font-medium text-center text-sm sm:text-base"
               >
                 Cancel
               </Link>

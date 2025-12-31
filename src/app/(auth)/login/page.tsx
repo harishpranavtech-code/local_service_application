@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push("/"); // Redirect to homepage after login
+      router.push("/");
     } catch (err) {
       const error = err as Error;
       setError(error.message || "Login failed. Please try again.");
@@ -33,101 +33,90 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="fixed inset-0 min-h-screen w-screen overflow-hidden bg-linear-to-r from-black via-neutral-900 to-black">
-      {/* Subtle background glow */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-105 w-105 rounded-full bg-white/5 blur-3xl" />
+    <div className="fixed inset-0 min-h-screen w-screen bg-linear-to-r from-black via-neutral-900 to-black flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-neutral-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-400 mb-6 text-sm sm:text-base">
+            Sign in to your account
+          </p>
 
-      <div className="relative z-10 flex min-h-screen w-full items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          <div className="rounded-2xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl p-8 shadow-2xl">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
-              <p className="mt-2 text-sm text-gray-400">
-                Sign in to continue to your dashboard
-              </p>
+          {error && (
+            <div className="bg-neutral-800/50 border border-white/10 text-gray-300 px-4 py-3 rounded-lg mb-4 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300 mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2.5 sm:py-2 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
+                placeholder="you@example.com"
+              />
             </div>
 
-            {error && (
-              <div className="mb-6 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-300">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400"
-                >
-                  Email
-                </label>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-300 mb-1"
+              >
+                Password
+              </label>
+              <div className="relative">
                 <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="you@example.com"
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition"
+                  className="w-full px-4 py-2.5 sm:py-2 pr-10 bg-neutral-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm sm:text-base"
+                  placeholder="••••••••"
                 />
-              </div>
-
-              {/* Password */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400"
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none"
                 >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    placeholder="••••••••"
-                    className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white transition"
-                  >
-                    {showPassword ? (
-                      <Eye className="h-5 w-5" />
-                    ) : (
-                      <EyeOff className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
+            </div>
 
-              {/* Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-lg bg-white py-3 text-sm font-semibold text-black hover:bg-gray-200 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Signing in..." : "Sign In"}
-              </button>
-            </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-200 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
 
-            {/* Footer */}
-            <p className="mt-8 text-center text-sm text-gray-400">
-              Do not have an account?{" "}
-              <Link
-                href="/register"
-                className="font-semibold text-white hover:underline"
-              >
-                Sign up
-              </Link>
-            </p>
-          </div>
+          <p className="mt-6 text-center text-gray-400 text-sm sm:text-base">
+            Do not have an account?{" "}
+            <Link
+              href="/register"
+              className="text-white hover:text-gray-300 font-medium"
+            >
+              Sign up
+            </Link>
+          </p>
         </div>
       </div>
     </div>
