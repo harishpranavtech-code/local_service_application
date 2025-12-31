@@ -44,10 +44,11 @@ export default function ProviderDashboardLayout({
   return (
     <div className="fixed inset-0 min-h-screen w-screen bg-linear-to-r from-black via-neutral-900 to-black">
       <div className="flex h-screen">
-        {/* Mobile Menu Button */}
+        {/* FIXED TOGGLE BUTTON - Always visible on mobile */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-neutral-900/80 backdrop-blur-xl border border-white/10 rounded-lg text-white"
+          className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-neutral-900/95 backdrop-blur-xl border border-white/10 rounded-lg text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
+          aria-label={sidebarOpen ? "Close menu" : "Open menu"}
         >
           {sidebarOpen ? (
             <X className="w-6 h-6" />
@@ -59,25 +60,27 @@ export default function ProviderDashboardLayout({
         {/* Sidebar - Mobile Overlay */}
         {sidebarOpen && (
           <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30 transition-opacity duration-300"
             onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
           />
         )}
+
         {/* Sidebar */}
         <aside
           className={`
-      ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      lg:translate-x-0
-      fixed lg:static
-      w-64 h-screen
-      bg-neutral-900/80 backdrop-blur-xl border-r border-white/10
-      transition-transform duration-300 ease-in-out
-      z-40
-    `}
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+          fixed lg:static
+          w-64 h-screen
+          bg-neutral-900/95 backdrop-blur-xl border-r border-white/10
+          transition-transform duration-300 ease-out
+          z-40
+        `}
         >
           <div className="flex flex-col h-full">
-            {/* Logo */}
-            <div className="p-6 border-b border-white/10">
+            {/* Logo - with padding to avoid button overlap on mobile */}
+            <div className="p-6 border-b border-white/10 pt-20 lg:pt-6">
               <Link href="/" onClick={() => setSidebarOpen(false)}>
                 <h1 className="text-xl sm:text-2xl font-bold text-white cursor-pointer">
                   Provider Hub
@@ -105,7 +108,7 @@ export default function ProviderDashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
-                <Home className="w-5 h-5" />
+                <Home className="w-5 h-5 shrink-0" />
                 <span>Dashboard</span>
               </Link>
 
@@ -114,7 +117,7 @@ export default function ProviderDashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
-                <Briefcase className="w-5 h-5" />
+                <Briefcase className="w-5 h-5 shrink-0" />
                 <span>My Services</span>
               </Link>
 
@@ -123,7 +126,7 @@ export default function ProviderDashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
-                <Calendar className="w-5 h-5" />
+                <Calendar className="w-5 h-5 -0" />
                 <span>Bookings</span>
               </Link>
 
@@ -132,7 +135,7 @@ export default function ProviderDashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors"
               >
-                <DollarSign className="w-5 h-5" />
+                <DollarSign className="w-5 h-5 shrink-0" />
                 <span>Earnings</span>
               </Link>
             </nav>
@@ -146,7 +149,7 @@ export default function ProviderDashboardLayout({
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-neutral-800/50 rounded-lg transition-colors w-full"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-5 h-5 shrink-0" />
                 <span>Logout</span>
               </button>
             </div>
@@ -154,7 +157,7 @@ export default function ProviderDashboardLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto lg:ml-0">{children}</main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
